@@ -218,21 +218,6 @@ def get_pending_commands(server_name,shard_id):
     if my_commands:
         for cmd in my_commands: cmd['status'] = 'Sent'
         return {'commands': my_commands}
-"""
-@get('/servers/<server_name>/<shard_id>/commands')
-def get_pending_commands(server_name,shard_id):
-    my_shard = get_shard(server_name, shard_id)
-    if my_shard is None:
-        response.status = 404
-        return {}
-    if request.params.get('status') is None:
-        return {'commands': my_shard['commands']}
-    else:
-        my_commands = [command for command in my_shard['commands'] if command['status'].lower() == "new"]
-        if my_commands:
-            for cmd in my_commands: cmd['status'] = 'Sent'
-            return {'commands': my_commands}
-"""
 ################
 
 
@@ -257,43 +242,6 @@ def post_command(server_name, shard_id=None):
         if server_name == 'default': server_name = default_server
         response.status = new_command(server_name, shard_id, my_command)
         return response
-
-"""
-@post('/servers/<server_name>/commands')
-def post_command(server_name):
-    if server_name == 'default': server_name = default_server
-    my_server = get_server(server_name)
-    if my_server is None:
-        response.status = 404
-        return
-    else:
-        for my_shard in my_server['shards']:
-            my_command = {
-                'id': len(my_shard['commands']),
-                'command': request.json.get('command'),
-                'status': None}
-            my_shard['commands'].append(my_command)
-        response.status = 201
-        return response
-
-# Post new command for a single shard (usually for master).
-@post('/servers/<server_name>/<shard_id>/commands')
-def post_shard_command(server_name,shard_id):
-    if server_name == 'default': server_name = default_server
-    my_shard = get_shard(server_name, shard_id)
-    if my_shard is None: my_shard = get_shard(server_name, int(shard_id)-1)
-    if my_shard is None:
-        response.status = 404
-        return
-    else:
-        my_command = {
-            'id': len(my_shard['commands']),
-            'command': request.json.get('command'),
-            'status': None}
-        my_shard['commands'].append(my_command)
-        response.status = 201
-        return response
-"""
 ################
 
 
